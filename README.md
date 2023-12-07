@@ -1,4 +1,4 @@
-<h2>How install</h2>
+<h1>How install</h1>
 The fist step is to copy the files on AddOns folder and then paste it in the path AddOns of Ninjatrader8.
 
 ![addons](/how_install/addons.png)
@@ -33,26 +33,6 @@ Book map Filters:
 * Agressive market orders: X(detect agressive volume from X, this is show in the price)
 * Big pending orders: Y(detect orders from Y, it is useful for detect HFT)
 
-There are many other features that have to do with the tool's style and colors
-
-![bookmap1](/book_map_imgs/setup.png)
-
-Demo of default config of BookMap.
-
-![bookmap2](/book_map_imgs/zoom.png)
-
-Tunning ladder for see Bid/Ask separatly.
-
-![bookmap3](/book_map_imgs/3_delta_and_total.png)
-
-Zoom for show number of volume.
-
-![bookmap4](/book_map_imgs/4_delta_and_total.png)
-
-Another zoom for see big volume of orders(setting a pre-defined filter)
-
-![bookmap5](/book_map_imgs/2_bid_and_ask.png)
-
 <h1>Order Flow</h1>
 The order flow is a tool that allows us to see the flow of orders in the market, with this we can see the difference between
 the level of supply and demand. A good trader(or an AI algorithm in my case) can provide us information about a possible future price imbalance, and using this knowledge exploit a resistance point at which to place an order.
@@ -65,33 +45,6 @@ This tools offers a lot of styles and formulas to deal with it:
 * Style: Profile, Heatmap
 * Cluster POC, POC Lines, Cluster POI, POI Lines
 * Extra info: POC = Point of control(Maximum volume cluster), POI = Point of imbalance(Minimum volume cluster)
-The POI is a concept that i create, and just is the oppose to the POC...
-
-![orderflow1](/order_flow_imgs/setup.png)
-
-Demo of default config of the Order Flow/Footprint/Cluster chart(using BidAsk formula).
-
-![orderflow2](/order_flow_imgs/bidask_volume_poc_poi.png)
-
-Cluster POC + Cluster POI + POC and POI Lines(using TotalDelta formula)
-
-![orderflow3](/order_flow_imgs/total_delta_cluster_poc_poi_lines.png)
-
-Zooming the cluster we can see the contracts(using TotalDelta formula)
-
-![orderflow4](/order_flow_imgs/total_delta_volume.png)
-
-![orderflow5](/order_flow_imgs/bidask_volume_poc_poi2.png)
-
-Using Heatmap style(BidAsk formula)
-
-![orderflow6](/order_flow_imgs/bidask_volume_poc_poi_heatmap2.png)
-
-Using Heatmap style(Total formula)
-
-![orderflow7](/order_flow_imgs/total_volume_poc_poi_heatmap.png)
-
-![orderflow8](/order_flow_imgs/total_volume_poc_poi_heatmap2.png)
 
 <h1>Volume Profile</h1>
 
@@ -106,37 +59,6 @@ Features:
 * Hold CTRL and select a zone in the chart(the selected area will be marked in blue), then left click to show a new Volume Profile.
 * Hold SHIFT and select an added Volume Profile(if the selected area is correct will be marked in red), then left click to delete a Volume Profile.
 
-![volumeprofile1](/volume_analysis_profile_imgs/setup.png)
-![volumeprofile2](/volume_analysis_profile_imgs/props.png)
-
-Default config(BidAsk formula).
-
-![volumeprofile3](/volume_analysis_profile_imgs/bidask_poc_poi.png)
-
-Total and BidAsk formula
-
-![volumeprofile4](/volume_analysis_profile_imgs/totalbidask_poc_poi.png)
-
-Zooming the ladder of prices to see the volume.
-
-![volumeprofile5](/volume_analysis_profile_imgs/ladder_information.png)
-
-Only Delta volume calculations
-
-![volumeprofile6](/volume_analysis_profile_imgs/delta_poc_poi.png)
-
-Select a zone to add a new volume profile.
-
-![volumeprofile7](/volume_analysis_profile_imgs/press_ctrl_and_drag_before.png)
-
-Select a volume profile to delete.
-
-![volumeprofile8](/volume_analysis_profile_imgs/pos_and_shift.png)
-
-Total and Delta and BidAsk volume
-
-![volumeprofile9](/volume_analysis_profile_imgs/total_delta_bidask_poc_poi.png)
-
 <h1>Volume Filter</h1>
 
 The volume filter is an indispensable weapon when we need to detect areas of important volume, probably the market is in a battle between buyers and sellers. Sometimes we will only filter out a specific amount of volume while at other times we will need a "map" of all incoming volume (from the smallest to the most aggressive). This tool is very useful if is combined, for example with the Book Map.
@@ -150,25 +72,6 @@ Geometry:
 * Agressive level: X(this impact on the size of the volume zone).
 * Among others...
 
-Default setup
-![volumefilter1](/volume_filter_imgs/setup.png)
-
-Filtering volume using Delta formula.
-
-![volumefilter2](/volume_filter_imgs/delta_circle_fill.png)
-
-Zooming
-
-![volumefilter3](/volume_filter_imgs/delta_circle_nofill.png)
-
-Using rectangles geometry
-
-![volumefilter4](/volume_filter_imgs/delta_rect_nofill2.png)
-
-Using Circles geometry with Total formula
-
-![volumefilter5](/volume_filter_imgs/total_circle_nofill.png)
-
 <h1>Market Volume</h1>
 
 This is the simplest volume analysis tool, and one of the most used... with it we can see the total amount of Delta volume, accumulated volume among other characteristics. One of the most innovative things is that we can choose cumulative time-frames (most tools of this type only allow a fixed time) as a default period. So we can set volume time-frames.
@@ -177,23 +80,3 @@ Features:
 * Formula: BidAsk, Delta, Total, TotalBidAsk, TotalDelta.
 * Period: 1(by default, if we increase this amount we can accumulate the volume period)
 * Market calculation style: Zero Line Color
-
-Default setup.
-
-![marketvolume1](/market_volume_imgs/setup.png)
-
-Using Delta formula, Periods: 5
-
-![marketvolume2](/market_volume_imgs/delta.png)
-
-Using Total formula, Periods: 5
-
-![marketvolume3](/market_volume_imgs/total.png)
-
-Using TotalDelta formula, Periods: 5
-
-![marketvolume4](/market_volume_imgs/total_delta.png)
-
-Using TotalBidAsk formula, Periods: 5
-
-![marketvolume5](/market_volume_imgs/total_bid_ask.png)
