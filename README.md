@@ -1,20 +1,3 @@
-<h1>How install</h1>
-The fist step is to copy the files on AddOns folder and then paste it in the path AddOns of Ninjatrader8.
-
-![addons](/how_install/addons.png)
-
-The we need to do the same for the indicators(Bookmap.cs, MarketVolume.cs, OrderFlow.cs, VolumeAnalysisProfile.cs, VolumeFilter.cs). We paste it in the Ninjatrader8 indicators folder
-
-![addons](/how_install/indicators.png)
-
-Finally we need to activate "Tick Replay": Tools->Options->Market Data and activate "Show Tick Replay".
-
-![opts](/how_install/tick_replay_enabled.png)
-
-The same for Data Series of each Chart we use: New->Chart->Instrument(for example ES) and activate "Tick Replay".
-
-![ds](/how_install/tick_replay_data_series.png)
-
 <h1>Bookmap + Order book</h1>
 The bookmap serves to see the depth of market (DOM or Level 2) using a heat map, which is useful to detect capital injections, aggressive and passive orders, aggressive levels of volume and also comes with an Order Book that shows the distribution of the price along with the total amount of volume in the market (both Total and Bid/Ask).
 
