@@ -1,3 +1,21 @@
+/* 
+NT8-OrderFlowKit
+Copyright (C) 2020  Gabriel Zenobi
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #region Using declarations
 using System;
 using System.Collections.Generic;
@@ -31,7 +49,7 @@ public static class __VolumeFilterProperties{
 		Total
 	}
 	
-//	//** Implementar mas adelante para detectar volumen en barras ademas de clusters de barra
+//	//** Implement later to detect volume in bars in addition to bar clusters
 //	public enum Type
 //	{
 //		Cluster,
@@ -84,7 +102,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			private SharpDX.Color colorAskFontColor;
 			private SharpDX.Color colorTotalFontColor;
 			
-			// !- Para copiado de datos internos;
+			// !- For copying internal data
 			private float barX;
 			private float barY;
 			// !- setup calculation
@@ -96,7 +114,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			private float brushTotalFontOpacity;
 			private float outlineOpacity;
 			
-			// !- informacion
+			// !- information
 			private VolumeAnalysis.WyckoffBars wyckoffBars;
 			private VolumeAnalysis.WyckoffBars.Bar currentBar;
 			private VolumeAnalysis.MarketOrder marketOrder;
@@ -154,14 +172,14 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				this.hasGeometryFill = hasGeometryFill;
 				switch(volumeFilterGeometry)
 				{
-					// !- rectangulo relleno
+					// !- filled rectangle
 					case __VolumeFilterProperties.Geometry.Rectangle:
 					{
 						this.Rect = new SharpDX.RectangleF();
 						this.renderGeometry = this._renderRectangle;
 						break;
 					}
-					// !- circulo relleno
+					// !- filled circle
 					case __VolumeFilterProperties.Geometry.Circle:
 					{
 						this.Ellipse = new SharpDX.Direct2D1.Ellipse();
@@ -282,12 +300,12 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				if( d < this.minVolumeFilter ){
 					return;
 				}
-				// !- de esta forma graficamos la geometria dependiendo del volumen maximo del cluster
-				// de la barra
+				// !- In this way we graph the geometry depending on the maximum volume of the cluster
+				// of the bar
 				//long maxClusterVolume = Math.Abs(this.currentBar.MaxClusterVolume.Delta);
 				//float maxClusterPer = (float)Math2.Percent(maxClusterVolume, d) / 100f;
 				float maxClusterPer = (float)Math2.Percent(this.minVolumeFilter * this.geometryAggresiveLevel, d);
-				// !- Renderizamos el cluster de precio
+				// !- render the price cluster
 				if( D >= 0 ){
 					this.renderGeometry(maxClusterPer, this.colorAskClusterColor);
 				}
@@ -324,9 +342,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				foreach(var wb in currentBar)
 				{
 					this.barY = CHART_SCALE.GetYByValue(wb.Key);
-					// !- informacion de volumen
+					// !-Volume info
 					this.marketOrder = wb.Value;
-					// !- renderizamos el cluster precio a precio
+					// !- we render the cluster price by price
 					this.renderCluster();
 				}
 			}
@@ -360,7 +378,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				
 				wyckoffVF = new WyckoffVolumeFilter();
 				
-				// !- Setup de estilo
+				// !- Style setup
 				_TextFont = new SimpleFont();
 				_TextFont.Family = new FontFamily("Arial");
 				_TextFont.Size = 10f;
@@ -380,7 +398,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				_TotalTextOpacity = 100f;
 				_OutlineOpacity = 70f;
 				
-				// !- setup de filtro
+				// !- filter setup
 				_MinVolumeFilter = 100;
 				_Geometry = __VolumeFilterProperties.Geometry.Circle;
 				_FillGeometry = true;
@@ -400,7 +418,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				wyckoffVF.setGeometry(_Geometry, _FillGeometry, _GeometryAggresiveLevel);
 				wyckoffVF.setOutlineOpacity(_OutlineOpacity);
 				wyckoffVF.setShowText(_ShowText);
-				// !- Siempre calcular las barras tick por tick
+				// !- Always calculate bars tick by tick
 				Calculate = Calculate.OnEachTick;
 			}
 			else if(State == State.DataLoaded)
@@ -426,16 +444,16 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			
 			#region RENDER_VOLUME_FILTER
 			
-			// 1- Altura minima de un tick
-			// 2- Ancho de barra en barra
+			// 1- Minimum height of a tick
+			// 2- Width of bar in bar
 			wyckoffVF.setHW(chartScale.GetPixelsForDistance(TickSize), chartControl.Properties.BarDistance);
-			// !- Apuntamos al target de renderizado
+			// !- Set the render target
 			wyckoffVF.setRenderTarget(chartControl, chartScale, ChartBars, RenderTarget);
 			
 			int fromIndex = ChartBars.FromIndex;
 			int toIndex = ChartBars.ToIndex;
 			
-			// !- para calculos en tiempo real
+			// !- For realtime calculation
 			if( wyckoffBars.CurrentBarIndex == toIndex ){
 				wyckoffVF.renderBarClusters(toIndex, true);
 				toIndex--;
