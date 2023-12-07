@@ -1,3 +1,21 @@
+/* 
+NT8-OrderFlowKit
+Copyright (C) 2020  Gabriel Zenobi
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #region Using declarations
 using System;
 using System.Collections.Generic;
@@ -108,7 +126,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			private float POILines_strokeWidth;
 			private SharpDX.Direct2D1.StrokeStyle POILines_strokeStyle;
 			
-			// !- Para copiado de datos internos;
+			// !- For copying internal data
 			private float barX;
 			private float barY;
 			private VolumeAnalysis.WyckoffBars wyckoffBars;
@@ -233,7 +251,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 						long total = this.volumeInfo.Total;
 						B = (long)Math2.Percent(total, this.volumeInfo.Bid);
 						A = (long)Math2.Percent(total, this.volumeInfo.Ask);
-						// !- agregamos el simbolo de %
+						// !- add symbol %
 						C = "%";
 						break;
 					}
@@ -264,7 +282,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 						long total = this.volumeInfo.Total;
 						T = total;
 						D = (long)Math2.Percent(total, Math.Abs(this.volumeInfo.Delta));
-						// !- agregamos el simbolo de %
+						// !- add the symbol %
 						C = "%";
 						break;
 					}
@@ -295,7 +313,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					{
 						long total = this.volumeInfo.Total;
 						s_D = Math2.Percent(total, Math.Abs(D)).ToString();
-						// !- agregamos el simbolo de %
+						// !- add the symbol %
 						s_D+= "%";
 						break;
 					}
@@ -359,8 +377,8 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			{
 				get{ return this.realTime; }
 			}
-			// *- para la posicion del order flow, clusters y texto, si el resultado es negativo
-			// se invierte la posicion
+			// *- for the position of the order flow, clusters and text, 
+			// if the result is negative the position is inverted
 			private bool calculateXPosition(out float barXpos)
 			{
 				barXpos = 0;
@@ -389,7 +407,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				if( orderFlowPosition == _OrderFlowEnums.Position.Left )//switch(orderFlowPosition)
 				{
 					return -W;
-					// !- No necesitamos calcular la fuente
+					// !- We don't need to calculate the source
 					//case _OrderFlowEnums.Position.Right:{ return 0; }
 					//case _OrderFlowEnums.Position.Left:{ return -W; }
 					//case _OrderFlowEnums.Position.Center:{ return -(W / 2f); }
@@ -412,9 +430,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					case _OrderFlowEnums.Calculation.BidAsk:
 					case _OrderFlowEnums.Calculation.Total:
 					{
-						// !- Obtenemos el porcentaje de volumen a partir del cluster maximo, en este punto
-						// @maxClusterVolume representa el 100% y @vs.Total es el volumen en cada nivel
-						// de precio, entonces si: maxClusterVolume == vs.Total el porcentaje sera 100%
+						// !- We obtain the volume percentage from the maximum cluster, at this point
+						// @maxClusterVolume represents 100% and @vs.Total is the volume at each level
+						// of price, then if: maxClusterVolume == vs.Total the percentage will be 100%
 						return (float)Math2.Percent(this.currentBar.MaxClusterVolume.Total, this.volumeInfo.Total);
 					}
 					case _OrderFlowEnums.Calculation.TotalDelta:
@@ -438,7 +456,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				this.Rect2.Y = this.Rect.Y;
 				this.Rect2.Height = this.Rect.Height;
 				
-				// !- calculamos el estilo(profile, heatmap)
+				// !- calculate the style(profile, heatmap)
 				switch( orderFlowStyle )
 				{
 					case _OrderFlowEnums.Style.Profile:
@@ -449,9 +467,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 						Rect.X = barX + bar_x;//barX + (W / 4f);
 						Rect2.X= Rect.X;
 						
-						// !- Anchura maxima: W / 2
-						// el cual representa la anchura total de cada cluster, a partir de esto el
-						// calculo (% * W) nos dara que cantidad de pixeles corresponde a cada cluster
+						// !- Maximum width: W / 2
+						// which represents the total width of each cluster, from this the
+						// calculation (% * W) will give us the number of pixels corresponding to each cluster
 						float width = W / 2f;
 						float width_per, width_per2;
 						
@@ -494,9 +512,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 						bool invertSign = this.calculateXPosition(out bar_x);
 						
 						Rect.X = barX + bar_x;//barX + (W / 4f);
-						// !- Anchura maxima: W / 2
-						// el cual representa la anchura total de cada cluster, a partir de esto el
-						// calculo (% * W) nos dara que cantidad de pixeles corresponde a cada cluster
+						// !- Maximum width: W / 2
+						// which represents the total width of each cluster, from this the
+						// calculation (% * W) will give us the number of pixels corresponding to each cluster
 						float width = W / 2f;
 						float width_per = (float)Math.Round((clusterPOC_per * width) / 100);
 						if( invertSign )
@@ -526,9 +544,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 						bool invertSign = this.calculateXPosition(out bar_x);
 						
 						Rect.X = barX + bar_x;//barX + (W / 4f);
-						// !- Anchura maxima: W / 2
-						// el cual representa la anchura total de cada cluster, a partir de esto el
-						// calculo (% * W) nos dara que cantidad de pixeles corresponde a cada cluster
+						// !- Maximum width: W / 2
+						// which represents the total width of each cluster, from this the
+						// calculation (% * W) will give us the number of pixels corresponding to each cluster
 						float width = W / 2f;
 						float width_per = (float)Math.Round((clusterPOC_per * width) / 100);
 						if( invertSign )
@@ -584,20 +602,20 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					}
 				}
 				
-				// !- cluster maximo, es necesario que el precio actual coincida con el precio del cluster maximo
-				// de otro modo si el volumen total es identico(se repite en la vela mas de una vez) el renderizado
-				// mostratra mas de un cluster maximo confundiendo cual fue el ultimo maximo...
+				// !- maximum cluster, it is necessary that the current price coincides with the price of the maximum cluster
+				// otherwise if the total volume is identical (repeated in the candle more than once) the rendering
+				// shows more than one maximum cluster, confusing which was the last maximum...
 				if( this.showClusterPOC && Math2.Percent(currentBar.MaxClusterVolume.Total, volumeInfo.Total) == 100 && currentBar.MaxClusterPrice == price ){
 					myDrawRectangle(ref Rect, colorMaxVolumeClusterColor, maxClusterOpacity, 1.5f);
 				}
-				// !- cluster minimo, misma logica
+				// !- minimal cluster, minimal logic
 				if( this.showClusterPOI && Math2.Percent(currentBar.MinClusterVolume.Total, volumeInfo.Total) == 100 && currentBar.MinClusterPrice == price ){
 					myFillRectangle(ref Rect, colorMinVolumeClusterColor, minClusterOpacity);
 				}
 			}
 			private void renderText()
 			{
-				// !- renderizamos el texto
+				// !- render the text
 				if( this.showText && W >= minFontWidth && H >= minFontHeight )
 				{
 					switch( orderFlowStyle )
@@ -620,7 +638,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					this._renderOFText();//RenderTarget.DrawText(string.Format("{0}x{1}", T, D), volumeTextFormat, Rect, Brushes.CornflowerBlue.ToDxBrush(RenderTarget, 1.0f));
 				}
 			}
-			// !- Renderizado para onRender
+			// !- Render for onRender
 			private void renderBarCluster(double price)
 			{
 				renderCluster();
@@ -656,7 +674,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 								end_maxClusterVec.X -= barW;
 								break;
 							}
-							/* // podemos omitirlo es redundante
+							/* // redudant
 							case _OrderFlowEnums.Position.Center:
 							{
 								beg_maxClusterVec.X = this.barX;
@@ -665,7 +683,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 								break;
 							}*/
 						}
-						/* // podemos omitirlo es redundante
+						/* // redundant
 						case _OrderFlowEnums.Style.HeatMap:
 						{
 							break;
@@ -693,7 +711,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			}
 			public void renderBarClusters(int barIndex, bool realtimeCalculation)
 			{
-				// !- Optimizamos para calculos en tiempo-real
+				// !- We optimize for real-time calculations
 				if( realtimeCalculation ){
 					//if( !this.wyckoffBars.BarExists(barIndex) ) return;
 					this.currentBar = this.wyckoffBars.CurrentBar;//this.currentBar = this.wyckoffBars[barIndex];
@@ -703,16 +721,16 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					this.currentBar = this.wyckoffBars[barIndex];
 				}
 				this.barX = CHART_CONTROL.GetXByBarIndex(CHART_BARS, barIndex);
-				// -- renderizamos las lineas de POCs y POIs si estas fueron calculadas
+				// -- We render the lines of POCs and POIs if they were calculated
 				renderLines(barIndex);
 				
 				double price;
 				foreach(var wb in currentBar){
 					price = wb.Key;
 					this.barY = CHART_SCALE.GetYByValue(price);
-					// !- informacion de volumen
+					// !- volume information
 					this.volumeInfo = wb.Value;
-					// !- renderizamos el cluster precio a precio
+					// !- we render the cluster price by price
 					renderBarCluster(price);
 				}
 			}
@@ -746,7 +764,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				//See Help Guide for additional information.
 				IsSuspendedWhileInactive					= false;
 				
-				// !- Setup de estilo
+				// !- Style setup
 				_TextFont = new SimpleFont();
 				_TextFont.Family = new FontFamily("Arial");
 				_TextFont.Size = 10f;
@@ -768,10 +786,10 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				_MaxClusterOpacity = 60f;
 				_MinClusterVolumeColor = Brushes.Violet;
 				_MinClusterOpacity = 20f;
-				// !- Por defecto tiene un 70% de opacidad cada nivel de cluster
+				// !- By default, each cluster level has 70% opacity
 				_ClustersOpacity = 70f;
 				
-				// !- Estilo de lineas POCs y POIs
+				// !- POCs and POIs line style
 				_POCLinesColor = Brushes.WhiteSmoke;
 				_POCLinesOpacity = 70f;
 				_POCLines_strokeWidth = 1.0f;
@@ -781,7 +799,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				_POILines_strokeWidth = 1.0f;
 				_POILinesStrokeStyle = DashStyleHelper.Dash;//SharpDX.Direct2D1.DashStyle.Dash;
 				
-				// !- Calculos del order flow por defecto
+				// !- Default order flow calculations
 				_OrderFlowCalculation = _OrderFlowEnums.Calculation.BidAsk;
 				_OrderFlowRepresentation = _OrderFlowEnums.Representation.Volume;
 				_OrderFlowPosition = _OrderFlowEnums.Position.Right;
@@ -792,7 +810,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				_ShowPOISLines = false;
 				_ShowText = true;
 				_ShowOrderFlow = true;
-				// !- calculamos la ultima barra creada en tiempo real/mercado (?)
+				// !- We calculate the last bar created in real time
 				_RealtimeHeuristic = true;
 			}
 			else if (State == State.Configure)
@@ -854,21 +872,21 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			}
 			
 			//renderOF.BarW = (float)chartControl.BarWidth;
-			// 1- Altura minima de un tick
-			// 2- Ancho de barra en barra
+			// 1- Minimum height of a tick
+			// 2- Width from bar to bar
 			wyckoffOF.setHW(chartScale.GetPixelsForDistance(TickSize), W);
-			// !- Apuntamos al target de renderizado
+			// !- Set the rendering target
 			wyckoffOF.setRenderTarget(chartControl, chartScale, ChartBars, RenderTarget);
 			
 			int fromIndex = ChartBars.FromIndex;
 			int toIndex = ChartBars.ToIndex;
-			// ?- es la ultima barra generada
+			// ?- is the last bar generated
 			if( toIndex == wyckoffBars.CurrentBarIndex )
 			{
 				if( _RealtimeHeuristic ){
 					wyckoffOF.renderBarClusters(toIndex, true);
 				}
-				// -- no cargamos la ultima barra en creacion
+				// -- we do not load the last bar in creation
 				toIndex--;
 			}
 			
