@@ -1,3 +1,21 @@
+/* 
+NT8-OrderFlowKit
+Copyright (C) 2020  Gabriel Zenobi
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #region Using declarations
 using System;
 using System.Collections.Generic;
@@ -31,7 +49,8 @@ public static class _BookMapEnums
 		Levels10,
 		Levels30,
 		Levels50,
-		Levels70
+		Levels70,
+		Levels100
 	}
 	public enum MarketOrdersCalculation
 	{
@@ -60,14 +79,14 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 		{
 			switch(ladderRange)
 			{
-				//case _BookMapEnums.LadderRange.Default10Levels:
-					//return 10;
 				case _BookMapEnums.LadderRange.Levels30:
 					return 30;
 				case _BookMapEnums.LadderRange.Levels50:
 					return 50;
 				case _BookMapEnums.LadderRange.Levels70:
 					return 70;
+				case _BookMapEnums.LadderRange.Levels100:
+					return 100;
 			}
 			return 10;
 		}
@@ -417,9 +436,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					marketOrdersCircle.Point.Y = Y;
 					marketOrdersCircle.RadiusX = this.W;
 					marketOrdersCircle.RadiusY = this.H;
-					// !- multiplicando*10 el filtro de volumen configurado por el usuario garantizamos
-					// que el porcentaje de opacidad parta de 100%(0,1f) en adelante para que el color sea maximo
-					// deberia alcanzar con esta formula el 1000%
+					// !- by multiplying*10 the volume filter configured by the user we guarantee
+					// that the opacity percentage starts from 100% (0.1f) onwards so that the color is maximum
+					// it should reach 1000% with this formula
 					float aggresivePer = (float)(Math2.Percent(this.filterAggresiveMarketOrders * 10, volume) / 100.0f);
 					//Target.DrawEllipse(marketOrdersCircle, brush.ToDxBrush(Target, aggresivePer), 2.0f);
 					//Target.FillEllipse(marketOrdersCircle, brush.ToDxBrush(Target, aggresivePer));
@@ -427,13 +446,13 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					myDrawEllipse(ref marketOrdersCircle, color, aggresivePer, 2.0f);
 					myFillEllipse(ref marketOrdersCircle, color, aggresivePer);
 					//return;
-					// !- no dejamos que sobrepase el maximo para el rect
+					// !- we do not let it exceed the maximum of the rect
 					//volume = this.filterAggresiveMarketOrders;
 					return;
 				}
 				
 				float per= (float)Math2.Percent(this.filterAggresiveMarketOrders, volume) / 100f;//volume / this.filterAggresiveMarketOrders;
-				// !- setup y renderizado de las ordenes agresivas
+				// !- setup and rendering of aggressive orders
 				marketOrdersRect.X = X - (this.W / 2f) * per;
 				marketOrdersRect.Y = Y - (this.H / 2f);
 				marketOrdersRect.Width = this.W * per;
@@ -521,7 +540,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				float maxVolumeAskPercent = (float)Math2.Percent(maxMarketTotal, currAsk) / 100f;
 				float half_margin_right = this.marginRight / 2f;
 				
-				// !- valores generales
+				// !- general values
 				this.cummulativeBookRect.X = this.PanelW - half_margin_right + (this.W / 2f);
 				this.cummulativeBookRect.Y = CHART_SCALE.GetYByValue(price) - (this.H / 2f);
 				this.cummulativeBookRect.Height = this.H;
@@ -531,7 +550,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				// !- render total
 //				this.cummulativeBookRect.Width = half_margin_right * maxVolumeTotalPercent;
 //				Target.FillRectangle(cummulativeBookRect, brushTotalMarketCummulativeColor.ToDxBrush(Target, maxVolumeTotalPercent));
-				// !- ordenes de capa de dibujo, evitamos que se tapen
+				// !- drawing layer orders, we prevent them from being covered
 //				if( maxVolumeBidPercent >= maxVolumeAskPercent ){
 				// !- render Bid
 				this.cummulativeBookRect.Width = half_margin_right * maxVolumeBidPercent;
@@ -570,7 +589,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				float half_margin_right = this.marginRight / 2f;
 				bool isMaxMargin = this.W < (half_margin_right - 45f);
 				
-				// !- valores generales
+				// !- general values
 				this.cummulativeBookRect.X = this.PanelW - half_margin_right + (this.W / 2f);
 				this.cummulativeBookRect.Y = CHART_SCALE.GetYByValue(price) - (this.H / 2f);
 				this.cummulativeBookRect.Height = this.H;
@@ -642,7 +661,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					else{
 						myFillRectangle(ref genRect, colorAskPendingOrdersColor, orderOpacity);
 					}
-					// !- debemos saber el % para poder filtrar correctamente
+					// !- we must know the % to be able to filter correctly
 					if( orderOpacity > this.filterTextPendingOrdersPer ){
 						myDrawText(volume.ToString(), ref this.genRect, colorAskPendingOrdersTextColor, bookmapMinFontWidth, bookmapMinFontHeight, bookmapTextFormat, askPendingOrdersTextOpacity);
 					}
@@ -654,7 +673,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					else{
 						myFillRectangle(ref genRect, colorBidPendingOrdersColor, orderOpacity);
 					}
-					// !- debemos saber el % para poder filtrar correctamente
+					// !- we must know the % to be able to filter correctly
 					if( orderOpacity > this.filterTextPendingOrdersPer ){
 						myDrawText(volume.ToString(), ref this.genRect, colorBidPendingOrdersTextColor, bookmapMinFontWidth, bookmapMinFontHeight, bookmapTextFormat, bidPendingOrdersTextOpacity);
 					}
@@ -678,9 +697,9 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				foreach(var order in orderBookLadder)
 				{
 					price = order.Key;
-					// !- no mostramos el nivel de la escalera de precios por donde el precio de mercado paso.
+					// !- We do not show the level of the price ladder through which the market price passed.
 					if( price == orderBookLadder.MarketPrice ){
-						// ! evitar error: The given key X was not present in the dictionary
+						// ! avoid error: The given key X was not present in the dictionary
 						if( bars > barIndex)//if( this.wyckoffBars.BarExists(barIndex) )
 							this.renderMarketOrder(barIndex, price, maxPendingOrderVolume);
 						
@@ -695,7 +714,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					}
 				}
 			}
-			/// !- Mostramos el libro de ordenes
+			/// !- We show the order book
 			public void renderOrderBookLadder()
 			{
 				if( cummulativeOrderBookLadder == null ){
@@ -727,26 +746,27 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 					
 					this.genRect.Y = CHART_SCALE.GetYByValue(price) - (this.H / 2f);
 					if(orderInfo.Type == VolumeAnalysis.OrderType.Ask ){
-						myFillRectangle(ref ordersBookRect, colorAskOrderBookColor, bidOrderBookOpacity);
-						myDrawRectangle(ref ordersBookRect, SharpDX.Color.Green, bidOrderBookOpacity, 1);
+						myFillRectangle(ref ordersBookRect, colorAskOrderBookColor, askOrderBookOpacity);
+						myDrawRectangle(ref ordersBookRect, colorAskOrderBookColor, askOrderBookOpacity, 1);
 						
 						myDrawText(orderInfo.Volume.ToString(), ref this.genRect, colorAskOrderBookTextColor, this.orderBookMinFontWidth, this.orderBookMinFontHeight, orderbookTextFormat, askOrderBookTextOpacity);
 					}
 					else{
-						myFillRectangle(ref ordersBookRect, colorBidOrderBookColor, askOrderBookOpacity);
-						myDrawRectangle(ref ordersBookRect, SharpDX.Color.Red, askOrderBookOpacity, 1);
+						myFillRectangle(ref ordersBookRect, colorBidOrderBookColor, bidOrderBookOpacity);
+						myDrawRectangle(ref ordersBookRect, colorBidOrderBookColor, bidOrderBookOpacity, 1);
 						
 						myDrawText(orderInfo.Volume.ToString(), ref this.genRect, colorBidOrderBookTextColor, this.orderBookMinFontWidth, this.orderBookMinFontHeight, orderbookTextFormat, bidOrderBookTextOpacity);
 					}
 				}
 			}
-			/// !- Mostramos el volume profile de la sesion
+			/// !- We show the volume profile of the session
+			// TODO: Enable show/hide session profile
 			public void renderCummulativeMarketOrderLadder()
 			{
 				if( cummulativeMarketOrderLadder == null ){
 					return;
 				}
-				/// !- calculamos en tiempo real el maximo y minimo de la escalera
+				/// !- We calculate in real time the maximum and minimum of the ladder
 				this.cummulativeMarketOrderLadder.CalculateMinAndMax(ref minMarketOL, ref maxMarketOL);
 				long maxMarketTotal= maxMarketOL.Total;
 				foreach(var marketOrder in cummulativeMarketOrderLadder){
@@ -817,8 +837,8 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			_BidPendingOrdersTextOpacity = 100f;
 			_AskPendingOrdersTextOpacity = 100f;
 			
-			_BidMarketOrdersColor = Brushes.Maroon;
-			_AskMarketOrdersColor = Brushes.SeaGreen;
+			_BidMarketOrdersColor = Brushes.SeaGreen;
+			_AskMarketOrdersColor = Brushes.Maroon;
 			_BidMarketOrdersTextColor = Brushes.IndianRed;
 			_AskMarketOrdersTextColor = Brushes.MediumAquamarine;
 			_BigPendingOrdersColor = Brushes.OrangeRed;
@@ -835,16 +855,16 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 		}
 		private void setBookMapCalculationsAndFilters()
 		{
-			// !- por defecto 50 niveles
+			// !- default 50 levels
 			_LadderRange = _BookMapEnums.LadderRange.Levels50;
 			_MarketBarsCalculation = _BookMapEnums.MarketBarsCalculation.EachTick;
 			_MarketOrdersCalculation = _BookMapEnums.MarketOrdersCalculation.Delta;
-			// !- mostrar ordenes desde % en adelante
+			// !- show orders from % onwards
 			_FilterPendingOrdersPer = 0;
 			_FilterTextPendingOrdersPer = 95;
-			// !- filtro para grandes ordenes a mercado
+			// !- filter for large market orders
 			_AggresiveMarketOrdersFilter = 50;
-			// !- 0 para ignorar el filtro de volumen
+			// !- 0 to ignore the volume filter
 			_FilterBigPendingOrders = 600;
 		}
 		private void setCummulativeBookCalculations()
@@ -930,7 +950,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			}
 			else if (State == State.Configure)
 			{
-				/// !- el orden no importa
+				/// !- order does not matter
 				/// 
 				wyckoffBM.setBookmapFontStyle(_BookmapTextFont);
 				wyckoffBM.setBookmapMinSizeFont(_BookmapMinFontWidth, _BookmapMinFontHeight);
@@ -989,15 +1009,15 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				int ladderRange = this.getLadderRange(_LadderRange);
 				
 				bookMap = new VolumeAnalysis.BookMap(Bars);
-				// !- nivel maximo de la escalera de precios
+				// !- maximum level of the price ladder
 				bookMap.setLadderRange(ladderRange);
 				bookMap.setFilterSessionPercent(_FilterSessionPendingOrdersPer);
 				if( this._SaveSession ){
 					if( _SessionSaveFilePath.IsNullOrEmpty() ){
-						// !- Desde la ultima barra cargada...
+						// !- Since the last bar loaded...
 						DateTime tmp = this.Bars.LastBarTime;
 						string sessionTime = tmp.Year.ToString() + '_' + tmp.Month.ToString() + '_' + tmp.Day.ToString();
-						// !- siempre cargamos el nombre del archivo con la ruta asociada a la propiedad de NT8
+						// !- we always load the file name with the path associated with the NT8 property
 						_SessionSaveFilePath =
 							NinjaTrader.Core.Globals.UserDataDir + "session" + sessionTime + ".bm";//NinjaTrader.Core.Globals.UserDataDir + "session" + Bars.LastBarTime.ToString() + ".bm";
 					}
@@ -1014,7 +1034,7 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 				wyckoffBM.setCummulativeMarketOrdersLadder(marketOrderLadder);
 				
 				orderBookLadder = new VolumeAnalysis.OrderBookLadder(TickSize);
-				// !- nivel maximo de la escalera de precios
+				// !- maximum level of the price ladder
 				orderBookLadder.SetLadderRange(ladderRange);
 				wyckoffBM.setOrderBookLadder(orderBookLadder);
 				//Print( Bars.LastBarTime.CompareTo(new DateTime(2020,4,7,  1,0,0)) );//Bars.GetBar(new DateTime(2020,4,8,  2, 0, 44)));
@@ -1035,14 +1055,14 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			if( !wyckoffBM.IsRealtime || IsInHitTest == null || chartControl == null || ChartBars.Bars == null ){
 				return;
 			}
-			// !- margen derecho de la pantalla
+			// !- right edge of the screen
 			chartControl.Properties.BarMarginRight = _BookMarginRight;
 			
-			// 1- Altura minima de un tick
-			// 2- Ancho de barra en barra
+			// 1- Minimum height of a tick
+			// 2- Width of bar in bar
 			wyckoffBM.setHW(chartScale.GetPixelsForDistance(TickSize), chartControl.Properties.BarDistance);
 			wyckoffBM.setChartPanelHW(ChartPanel.H, ChartPanel.W);
-			// !- Apuntamos al target de renderizado
+			// !- Set the render target
 			wyckoffBM.setRenderTarget(chartControl, chartScale, ChartBars, RenderTarget);
 			
 			int fromIndex = ChartBars.FromIndex;
@@ -1057,12 +1077,12 @@ namespace NinjaTrader.NinjaScript.Indicators.WyckoffZen
 			//} catch{ /*Print("Exception ocurred");*/ }
 			wyckoffBM.renderBackground();
 		}
-		// !- necesario para obtener el libro de ordenes(Level II)
+		// !- necessary to obtain the order book (Level II)
 		protected override void OnMarketDepth(MarketDepthEventArgs depthMarketArgs)
 		{
 			bookMap.onMarketDepth(depthMarketArgs);
 			orderBookLadder.AddOrder(Bars.LastPrice, depthMarketArgs);
-			// !- Renderizamos nuevamente
+			// !- We render again
 			ForceRefresh();
 		}
 		protected override void OnMarketData(MarketDataEventArgs MarketArgs){
